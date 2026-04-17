@@ -1,0 +1,56 @@
+services:
+  llm-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: llm-rag-api:latest
+    container_name: llm_rag_api
+
+    ports:
+      - "8000:8000"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+
+    env_file:
+      - .env
+
+    volumes:
+      # ── Данные приложения ──────────────────────────────────────
+      - ./documents:/app/documents       # исходные документы
+      - ./chroma_db:/app/chroma_db       # векторная база
+      - ./logs:/app/logs                 # логи
+
+      # ── Кэш моделей (самое важное) ────────────────────────────
+      # Модели скачиваются ОДИН РАЗ и хранятся между перезапусками
+      # Папки на хосте — удобно видеть что скачалось
+      - ./cache/huggingface:/app/.cache/huggingface
+      - ./cache/torch:/app/.cache/torch
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+volumes:
+  # Docker хранит эти volumes в:
+  # Windows: \\wsl$\docker-desktop-data\data\docker\volumes\
+  hf_cache:
+    driver: local
+  torch_cache:
+    driver: local

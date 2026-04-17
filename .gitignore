@@ -1,0 +1,35 @@
+# Окружение
+.venv/
+.env
+
+# Модели и данные
+chroma_db/
+logs/
+documents/
+*.log
+cache/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# PyCharm
+.idea/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Ruff
+.ruff_cache/

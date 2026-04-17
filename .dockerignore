@@ -1,0 +1,42 @@
+# Виртуальное окружение — не нужно в контейнере
+.venv/
+venv/
+env/
+
+# Модели и данные — монтируются через volumes
+chroma_db/
+documents/
+.cache/
+
+# Логи
+logs/
+*.log
+
+# Секреты
+.env
+.env.*
+!.env.example
+
+# Python кэш
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Документация
+*.md
