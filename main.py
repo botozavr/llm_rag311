@@ -147,7 +147,7 @@ async def llm_error_handler(request: Request, exc: LLMServiceError):
 @app.exception_handler(RequestValidationError)
 async def validation_error_handler(request: Request, exc: RequestValidationError):
     rid    = getattr(request.state, "request_id", "?")
-    errors = [f"{'→'.join(str(l) for l in e['loc'])}: {e['msg']}" for e in exc.errors()]
+    errors = [f"{'→'.join(str(loc) for loc in e['loc'])}: {e['msg']}" for e in exc.errors()]
     detail = "; ".join(errors)
     logger.warning("[%s] Ошибка валидации: %s", rid, detail)
     return JSONResponse(

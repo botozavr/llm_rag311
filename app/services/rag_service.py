@@ -217,7 +217,7 @@ class RAGService:
         for i, part in enumerate(parts, 1):
             lines = part.strip().split("\n")
             # Пропускаем первую строку (заголовок источника)
-            text_lines = [l.strip() for l in lines[1:] if l.strip()]
+            text_lines = [loc.strip() for loc in lines[1:] if loc.strip()]
             text = " ".join(text_lines)
 
             # Обрезаем до 300 символов по последней точке
