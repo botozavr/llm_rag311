@@ -22,24 +22,24 @@ ENV PYTHONUNBUFFERED=1 \
     TORCH_HOME=/app/.cache/torch
 
 # ================================================================
-# Системные зависимости
+# Системные зависимости с повторными попытками при сетевых сбоях
 # ================================================================
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.11 \
-    python3.11-dev \
-    python3-pip \
-    python3.11-venv \
-    # Нужен для сборки некоторых пакетов
-    build-essential \
-    # Для скачивания моделей
-    curl \
-    wget \
-    git \
-    # Для работы с PDF
-    poppler-utils \
-    # Очистка кэша apt
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN for i in 1 2 3; do \
+        apt-get update && \
+        apt-get install -y --no-install-recommends \
+            python3.11 \
+            python3.11-dev \
+            python3-pip \
+            python3.11-venv \
+            build-essential \
+            curl \
+            wget \
+            git \
+            poppler-utils \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* \
+        && break || sleep 20; \
+    done
 
 # Делаем python3.11 дефолтным
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 \
